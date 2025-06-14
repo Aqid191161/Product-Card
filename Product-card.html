@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern E-commerce Product Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full mx-auto">
+        <!-- Product Card -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
+            <!-- Product Image with Badge -->
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
+                     alt="Running Shoes" 
+                     class="w-full h-64 object-cover">
+                <span class="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-2 py-1 rounded-full">
+                    -25% OFF
+                </span>
+                
+                <!-- Favorite Button -->
+                <button id="favorite-btn" class="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full transition-all duration-300">
+                    <i id="heart-icon" class="far fa-heart"></i>
+                </button>
+                
+                <!-- Quick View Button (only visible on hover) -->
+                <button class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 hover:bg-black text-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                    Quick View
+                </button>
+            </div>
+            
+            <!-- Product Details -->
+            <div class="p-6">
+                <div class="flex items-center mb-1">
+                    <div class="flex text-yellow-400 text-sm">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <span class="text-gray-500 text-xs ml-2">(24 reviews)</span>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Nike Air Zoom Pegasus</h3>
+                <p class="text-gray-600 text-sm mb-4">Premium running shoes with responsive cushioning for all-day comfort.</p>
+                
+                <!-- Color Selection -->
+                <div class="mb-4">
+                    <p class="text-xs text-gray-500 font-medium mb-2">COLOR</p>
+                    <div class="flex space-x-2">
+                        <button class="w-5 h-5 rounded-full bg-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"></button>
+                        <button class="w-5 h-5 rounded-full bg-red-500 focus:ring-2 focus:ring-red-300 focus:ring-offset-2 focus:outline-none"></button>
+                        <button class="w-5 h-5 rounded-full bg-gray-900 focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:outline-none"></button>
+                    </div>
+                </div>
+                
+                <!-- Size Selection -->
+                <div class="mb-6">
+                    <p class="text-xs text-gray-500 font-medium mb-2">SIZE</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="size-btn w-10 h-10 rounded-md border border-gray-200 text-sm font-medium hover:bg-gray-100 focus:bg-gray-100">US 7</button>
+                        <button class="size-btn w-10 h-10 rounded-md border border-gray-200 text-sm font-medium hover:bg-gray-100 focus:bg-gray-100">US 8</button>
+                        <button class="size-btn w-10 h-10 rounded-md border border-gray-200 text-sm font-medium hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-200">US 9</button>
+                        <button class="size-btn w-10 h-10 rounded-md border border-gray-200 text-sm font-medium hover:bg-gray-100 focus:bg-gray-100">US 10</button>
+                        <button class="size-btn w-10 h-10 rounded-md border border-gray-200 text-sm font-medium hover:bg-gray-100 focus:bg-gray-100">US 11</button>
+                    </div>
+                </div>
+                
+                <!-- Price and Add to Cart -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 line-through text-sm">$129.99</p>
+                        <p class="text-2xl font-bold text-gray-900">$97.49</p>
+                    </div>
+                    <button id="add-to-cart" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-300 flex items-center">
+                        <i class="fas fa-shopping-cart mr-2"></i>
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Added to Cart Notification (hidden by default) -->
+        <div id="cart-notification" class="hidden fixed bottom-0 left-0 right-0 bg-green-500 text-white p-4 rounded-t-lg mx-auto max-w-md shadow-lg">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-2 text-xl"></i>
+                    <p>Item added to cart successfully!</p>
+                </div>
+                <button id="close-notification" class="ml-4">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle favorite button
+        const favoriteBtn = document.getElementById('favorite-btn');
+        const heartIcon = document.getElementById('heart-icon');
+        let isFavorited = false;
+        
+        favoriteBtn.addEventListener('click', function() {
+            if(isFavorited) {
+                heartIcon.classList.remove('fas');
+                heartIcon.classList.remove('text-red-500');
+                heartIcon.classList.add('far');
+            } else {
+                heartIcon.classList.remove('far');
+                heartIcon.classList.add('fas');
+                heartIcon.classList.add('text-red-500');
+            }
+            isFavorited = !isFavorited;
+        });
+        
+        // Size selection
+        const sizeBtns = document.querySelectorAll('.size-btn');
+        sizeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                sizeBtns.forEach(b => b.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600'));
+                this.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+            });
+        });
+        
+        // Add to cart functionality
+        const addToCartBtn = document.getElementById('add-to-cart');
+        const cartNotification = document.getElementById('cart-notification');
+        const closeNotificationBtn = document.getElementById('close-notification');
+        
+        addToCartBtn.addEventListener('click', function() {
+            // Show notification
+            cartNotification.classList.remove('hidden');
+            cartNotification.classList.add('animate-slide-up');
+            
+            // Change button text temporarily
+            this.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Added!';
+            this.classList.remove('bg-indigo-600');
+            this.classList.add('bg-green-500');
+            
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-shopping-cart mr-2"></i> Add to Cart';
+                this.classList.remove('bg-green-500');
+                this.classList.add('bg-indigo-600');
+            }, 2000);
+        });
+        
+        closeNotificationBtn.addEventListener('click', function() {
+            cartNotification.classList.add('animate-slide-down');
+            setTimeout(() => {
+                cartNotification.classList.remove('animate-slide-up', 'animate-slide-down');
+                cartNotification.classList.add('hidden');
+            }, 300);
+        });
+    </script>
+    
+    <style>
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(0); }
+            to { transform: translateY(100%); }
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+        
+        .animate-slide-down {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        
+        .size-btn:focus, .size-btn:active {
+            outline: none;
+            border-color: #4f46e5;
+        }
+        
+        @media (max-width: 640px) {
+            .product-card {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</body>
+</html>
